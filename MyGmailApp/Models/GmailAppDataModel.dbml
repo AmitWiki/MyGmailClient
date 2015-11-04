@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="GmailDatabase" Class="GmailAppDataModelDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\GmailDatabase.mdf;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="GmailDatabaseConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.UserRoles" Member="UserRoles">
+    <Type Name="UserRole">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="UserRole" Member="UserRole1" Type="System.String" DbType="VarChar(100) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="RoleDescription" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Association Name="UserRole_Login" Member="Logins" ThisKey="UserRole1" OtherKey="UserRole" Type="Login" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Logins" Member="Logins">
+    <Type Name="Login">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="FullName" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Username" Type="System.String" DbType="VarChar(100) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Password" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="UserRole" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Active" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Association Name="Login_GmailConfig" Member="GmailConfigs" ThisKey="Username" OtherKey="Username" Type="GmailConfig" />
+      <Association Name="UserRole_Login" Member="UserRole1" ThisKey="UserRole" OtherKey="UserRole1" Type="UserRole" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.GmailConfig" Member="GmailConfigs">
+    <Type Name="GmailConfig">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Username" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="GmailUsername" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="GmailPassword" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="IncomingServerAddress" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="OutgoingServerAddress" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="IncomingServerPort" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="OutgoingServerPort" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="UseSSL" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="Login_GmailConfig" Member="Login" ThisKey="Username" OtherKey="Username" Type="Login" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>

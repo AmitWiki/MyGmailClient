@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Welcome to my Gmail Application</h2>
+<br />
+@if (Request.IsAuthenticated)
+{
+    <p>
+        <h4>Hi <strong>@User.Identity.Name ! </strong> , You can click on your username on top right corner and click on :</h4>
+        <ol>
+            <li>
+                Go To Inbox - To check your Gmail Inbox if you have already configured your Gmail credentials
+            </li>
+            <li>
+                Manage Profile - To configure your user profile including your password for this application
+            </li>
+            <li>
+                Manage Gmail Credentials - To configure your Gmail credentials, your password is stored in encrpted format.
+            </li>
+            <li>
+                Log Off - To log off from this application
+            </li>
+        </ol>
+    </p>
+}
+else
+{
+    <br />
+    <p>
+        Using this application you can:
+        <ol>
+            <li>
+                Register, Login, Change password
+            </li>
+            <li>
+                Configure his/her gmail account
+            </li>
+            <li>
+                View pagewise inbox, compose and send simple text message, view and delete messages
+            </li>
+        </ol>
+    <p>
+        <h4>Please click on Login Menu on the top right corner and either Register or Login to continue!</h4>
+    </p>
+    </p>
+}
+
+
+

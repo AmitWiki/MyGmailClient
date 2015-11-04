@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="GmailAppDataModel">
+  <DataContextMoniker Name="/GmailAppDataModelDataContext" />
+  <nestedChildShapes>
+    <classShape Id="72d2b3ae-c476-45eb-9fb1-50d37b6fdd18" absoluteBounds="4.25, 4.75, 2, 1.3862939453125">
+      <DataClassMoniker Name="/GmailAppDataModelDataContext/UserRole" />
+      <nestedChildShapes>
+        <elementListCompartment Id="e19eaeba-bfc1-4763-903e-2148052d4f2a" absoluteBounds="4.265, 5.21, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="4ce9a2fd-0ef1-462c-99be-c25999af7efd" absoluteBounds="4.625, 1.875, 2, 1.9631982421875">
+      <DataClassMoniker Name="/GmailAppDataModelDataContext/Login" />
+      <nestedChildShapes>
+        <elementListCompartment Id="46878a98-010d-48ad-b87e-ed556237f685" absoluteBounds="4.64, 2.335, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(5.4375 : 4.75); (5.4375 : 3.8381982421875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/GmailAppDataModelDataContext/UserRole/UserRole_Login" />
+      <nodes>
+        <classShapeMoniker Id="72d2b3ae-c476-45eb-9fb1-50d37b6fdd18" />
+        <classShapeMoniker Id="4ce9a2fd-0ef1-462c-99be-c25999af7efd" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="f013597b-89ad-4637-a47f-15fc8a466503" absoluteBounds="2, 2.125, 2, 2.5401025390625">
+      <DataClassMoniker Name="/GmailAppDataModelDataContext/GmailConfig" />
+      <nestedChildShapes>
+        <elementListCompartment Id="43976a8e-2ce6-468a-a3ac-58a0aba8a2a5" absoluteBounds="2.015, 2.585, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(4.625 : 2.98159912109375); (4 : 2.98159912109375)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/GmailAppDataModelDataContext/Login/Login_GmailConfig" />
+      <nodes>
+        <classShapeMoniker Id="4ce9a2fd-0ef1-462c-99be-c25999af7efd" />
+        <classShapeMoniker Id="f013597b-89ad-4637-a47f-15fc8a466503" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

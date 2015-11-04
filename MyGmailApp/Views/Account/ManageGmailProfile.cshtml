@@ -1,0 +1,79 @@
+﻿@model MyGmailApp.Models.GmailConfig
+@{
+    ViewBag.Title = "Manage Gmail Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("ManageGmailProfile", "Account", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.ValidationSummary(true);
+    @Html.AntiForgeryToken();
+    
+    if (ViewBag.Message != null)
+    {
+        <div style="border:solid 1px green">
+            @ViewBag.Message
+        </div>
+    }
+    <div class="form-group">
+        @Html.LabelFor(model => model.IncomingServerAddress, new { @class = "control-label col-xs-2" })
+        <div class="col-xs-10">
+            @Html.EditorFor(model => model.IncomingServerAddress, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.IncomingServerAddress)
+        </div>
+    </div>
+    <div class="form-group">
+
+        @Html.LabelFor(model => model.IncomingServerPort, new { @class = "control-label col-xs-2" })
+        <div class="col-xs-10">
+            @Html.EditorFor(model => model.IncomingServerPort, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.IncomingServerPort)
+        </div>
+    </div>
+
+    <div class="form-group">
+
+        @Html.LabelFor(model => model.OutgoingServerAddress, new { @class = "control-label col-xs-2" })
+        <div class="col-xs-10">
+            @Html.EditorFor(model => model.OutgoingServerAddress, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.OutgoingServerAddress)
+        </div>
+    </div>
+
+    <div class="form-group">
+
+        @Html.LabelFor(model => model.OutgoingServerPort, new { @class = "control-label col-xs-2" })
+        <div class="col-xs-10">
+            @Html.EditorFor(model => model.OutgoingServerPort, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.OutgoingServerPort)
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.UseSSL, new { @class = "control-label col-xs-2" })
+        <div class="col-xs-10">
+            @Html.EditorFor(model => model.UseSSL, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.UseSSL)
+
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.GmailUsername, new { @class = "control-label col-xs-2" })
+        <div class="col-xs-10">
+            @Html.EditorFor(model => model.GmailUsername, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.GmailUsername)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.GmailPassword, new { @class = "control-label col-xs-2" })
+        <div class="col-xs-10">
+            @Html.PasswordFor(model => model.GmailPassword, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.GmailPassword)
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-offset-2 col-xs-10">
+            <input type="submit" class="btn btn-primary" value="Update Gmail Settings" />
+        </div>
+    </div>
+}

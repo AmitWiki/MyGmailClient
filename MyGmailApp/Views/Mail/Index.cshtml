@@ -1,0 +1,423 @@
+﻿@model List<MyGmailApp.Models.Email>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    body {
+        margin-top: 50px;
+    }
+
+    .nav-tabs .glyphicon:not(.no-margin) {
+        margin-right: 10px;
+    }
+
+    .tab-pane .list-group-item:first-child {
+        border-top-right-radius: 0px;
+        border-top-left-radius: 0px;
+    }
+
+    .tab-pane .list-group-item:last-child {
+        border-bottom-right-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+
+    .tab-pane .list-group .checkbox {
+        display: inline-block;
+        margin: 0px;
+    }
+
+    .tab-pane .list-group input[type="checkbox"] {
+        margin-top: 2px;
+    }
+
+    .tab-pane .list-group .glyphicon {
+        margin-right: 5px;
+    }
+
+        .tab-pane .list-group .glyphicon:hover {
+            color: #FFBC00;
+        }
+
+    a.list-group-item.read {
+        color: #222;
+        background-color: #F3F3F3;
+    }
+
+    hr {
+        margin-top: 5px;
+        margin-bottom: 10px;
+    }
+
+    .nav-pills > li > a {
+        padding: 5px 10px;
+    }
+
+    .ad {
+        padding: 5px;
+        background: #F5F5F5;
+        color: #222;
+        font-size: 80%;
+        border: 1px solid #E5E5E5;
+    }
+
+        .ad a.title {
+            color: #15C;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 110%;
+        }
+
+        .ad a.url {
+            color: #093;
+            text-decoration: none;
+        }
+</style>
+<div class="container">
+    <h2>Inbox - @ViewBag.EmailId</h2>
+    <hr>
+    <div class="row">
+        <div class="alert alert-success hide" id="errorSpan">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3 col-md-2">
+            <a href="#" class="btn btn-danger btn-sm btn-block" role="button" id="lnkCompose">
+                <i class="glyphicon glyphicon-edit"></i> Compose
+            </a>
+            <hr>
+            <ul class="nav nav-pills nav-stacked">
+                <li class="active">
+                    <a href="#"><span class="badge pull-right">@Model.Count</span> Inbox </a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-sm-9 col-md-10">
+            <button type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh" id="btnOpen">
+                <span>
+                    Open
+                </span>
+            </button>
+            <button type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh" id="btnDelete">
+                <span>
+                    Delete
+                </span>
+            </button>
+            <!-- Single button -->
+            <div class="pull-right">
+                <span class="text-muted"><b>@Model.First().SerialNo</b>–<b>@Model.Last().SerialNo</b></span>
+                <div class="btn-group btn-group-sm">
+                    @using (Html.BeginForm("Index", "Mail", FormMethod.Post, new { @style = "display: inline-block !important" }))
+                    {
+                        <input hidden="hidden" name="nextPageNumber" value="@(ViewBag.PageNumber - 1)">
+                        <input hidden="hidden" name="currentPageNumber" value="@ViewBag.PageNumber">
+                        if (ViewBag.PageNumber == 1)
+                        {
+                            <button type="submit" class="btn btn-default" disabled="disabled">
+                                <span class="glyphicon glyphicon-chevron-left" id="prevButton"></span>
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-default">
+                                <span class="glyphicon glyphicon-chevron-left" id="prevButton"></span>
+                            </button>
+                        }
+                    }
+
+                    @using (Html.BeginForm("Index", "Mail", FormMethod.Post, new { @style = "display: inline-block !important" }))
+                    {
+                        <input hidden="hidden" name="nextPageNumber" value="@(ViewBag.PageNumber + 1)">
+                        <input hidden="hidden" name="currentPageNumber" value="@ViewBag.PageNumber">
+                        <button type="submit" class="btn btn-default">
+                            <span class="glyphicon glyphicon-chevron-right" id="nextButton"></span>
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-9 col-md-10" style="top: 6px">
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="home">
+                    <div class="list-group">
+                        @foreach (MyGmailApp.Models.Email email in Model)
+                        {
+                            <a href="#" class="list-group-item messageSelector">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="@email.Uid.Id" class="messageSelector">
+                                    </label>
+                                </div>
+                                <span class="name" style="min-width: 120px;display: inline-block;">@email.FromDisplayName</span>
+                                <span class="">
+                                    @if (@email.Subject.Length > 50)
+                                    {
+                                        @email.Subject.Substring(0, 50)
+                                    }
+                                    else
+                                    {
+                                        @email.Subject
+                                    }
+                                </span>
+                                <span class="badge">@email.TimeReceived</span>
+                                <span class="pull-right">
+                                    @if (@email.HasAttachment)
+                                    {
+                                        @:<span class="glyphicon glyphicon-paperclip"></span>
+                                    }
+                                </span>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.modal compose message -->
+    <div class="modal hide" id="modalCompose" style="display: none">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <button type="button" id="modalCloseButton" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Compose Message</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label class="col-sm-2" for="inputTo">To</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" id="inputTo" placeholder="comma separated list of recipients">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2" for="inputSubject">Subject</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputSubject" placeholder="subject">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-12" for="inputBody">Message</label>
+                            <div class="col-sm-12">
+                                <textarea class="form-control" id="inputBody" rows="18"></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal" id="btnCancel">Cancel</button>
+                        <button type="button" class="btn btn-primary " id="sendMail">Send <i class="fa fa-arrow-circle-right fa-lg"></i></button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal compose message -->
+    <!-- /.modal view message -->
+    <div class="modal hide" id="modalViewMessage" style="display: none">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <button type="button" id="modalCloseMessage" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="messageTitle"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-sm-2" for="inputFrom">From</label>
+                            <div class="col-sm-10">
+                                <label class="form-control" id="messageFrom" placeholder="comma separated list of recipients"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2" for="inputTo">To</label>
+                            <div class="col-sm-10">
+                                <label class="form-control" id="messageTo" placeholder="comma separated list of recipients"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2" for="inputSubject">Subject</label>
+                            <div class="col-sm-10">
+                                <label class="form-control" id="messageSubject" placeholder="subject"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-12" for="inputBody">Message</label>
+                            <div class="col-sm-12">
+                                <label id="messageBody"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal" id="btnCancelMessage">Cancel</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal view message -->
+
+    <script type="text/javascript">
+        function OnSuccess(Response, text) {
+            $("#errorSpan").addClass("alert-success");
+            $("#errorSpan").removeClass("alert-danger");
+            $("#errorSpan").html("<strong>Success!</strong> " + Response.message);
+            $("#errorSpan").removeClass("hide");
+            $("#errorSpan").addClass("show");
+            $("#modalCompose").addClass("hide");
+            $("#modalCompose").removeClass("show");
+        }
+
+        function OnError(Request, status, error) {
+            $("#errorSpan").addClass("alert-danger");
+            $("#errorSpan").removeClass("alert-success");
+            $("#errorSpan").html("<strong>Error!</strong> " + Request.message);
+            $("#errorSpan").removeClass("hide");
+            $("#errorSpan").addClass("show");
+            $("#modalCompose").addClass("hide");
+            $("#modalCompose").removeClass("show");
+        }
+
+        function OnOpenSuccess(Response, text) {
+            $("#errorSpan").addClass("alert-success");
+            $("#errorSpan").removeClass("alert-danger");
+            $("#errorSpan").addClass("hide");
+            $("#modalCompose").addClass("hide");
+            $("#modalCompose").removeClass("show");
+            
+            $("#messageTitle").html(Response.Subject);
+            $("#messageFrom").text(Response.FromDisplayName + "<" + Response.FromEmail + ">");
+            $("#messageTo").html(Response.To);
+            $("#messageSubject").html(Response.Subject);
+            $("#messageBody").html(Response.Body);
+
+            $("#modalViewMessage").addClass("show");
+            $("#modalViewMessage").removeClass("hide");
+        }
+
+
+        $(document).ready(function () {
+            $("#modalCloseButton").click(function () {
+                $("#errorSpan").removeClass("show");
+                $("#errorSpan").addClass("hide");
+                $("#modalCompose").removeClass("show");
+                $("#modalCompose").addClass("hide");
+            });
+
+            $("#btnCancel").click(function () {
+                $("#errorSpan").removeClass("show");
+                $("#errorSpan").addClass("hide");
+                $("#modalCompose").addClass("hide");
+                $("#modalCompose").removeClass("show");
+            });
+
+            $("#lnkCompose").click(function () {
+                $("#errorSpan").removeClass("show");
+                $("#errorSpan").addClass("hide");
+                $("#modalCompose").removeClass("hide");
+                $("#modalCompose").addClass("show");
+            });
+
+            $("#sendMail").click(function () {
+                var model =
+                    {
+                        ToAsCsv: $("#inputTo").val(),
+                        Subject: $("#inputSubject").val(),
+                        Body: $("#inputBody").val(),
+                        FromEmail: "@ViewBag.EmailId",
+                    }
+
+                $.ajax({
+                    url: '@Url.Action("Compose")',
+                    type: 'POST',
+                    data: JSON.stringify(model),
+                    dataType: 'json',
+                    processData: false,
+                    contentType: 'application/json; charset=utf-8',
+                    success: OnSuccess,
+                    error: OnError,
+                    timeout: 30000
+                });
+            });
+
+            $("a.messageSelector").click(function () {
+                if ($(this).children("div").children("label").children("input[type='checkbox']").prop('checked')) {
+                    $(this).children("div").children("label").children("input[type='checkbox']").prop('checked', false);
+                }
+                else {
+                    $(this).children("div").children("label").children("input[type='checkbox']").prop('checked', true)
+                }
+            });
+
+            $("#modalCloseMessage").click(function () {
+                $("#errorSpan").removeClass("show");
+                $("#errorSpan").addClass("hide");
+                $("#modalViewMessage").addClass("hide");
+                $("#modalViewMessage").removeClass("show");
+            });
+
+            $("#btnCancelMessage").click(function () {
+                $("#errorSpan").removeClass("show");
+                $("#errorSpan").addClass("hide");
+                $("#modalViewMessage").addClass("hide");
+                $("#modalViewMessage").removeClass("show");
+            });
+
+
+            $("#btnOpen").click(function () {
+                $("#errorSpan").removeClass("show");
+                $("#errorSpan").addClass("hide");
+                if ($('input.messageSelector:checked').length == 1) {
+                    $.ajax({
+                        url: '@Url.Action("Read")',
+                        type: 'POST',
+                        data: "{emailUid:'" + $('input.messageSelector:checked').prop('id') + "'}",
+                        dataType: 'json',
+                        processData: false,
+                        contentType: 'application/json; charset=utf-8',
+                        success: OnOpenSuccess,
+                        error: OnError,
+                        timeout: 30000
+                    });
+                }
+                else {
+                    var req =
+                        {
+                            message: "Please select at least and most only one email to view it!"
+                        };
+                    OnError()
+                }
+            });
+
+            $("#btnDelete").click(function () {
+                $("#errorSpan").removeClass("show");
+                $("#errorSpan").addClass("hide");
+                if ($('input.messageSelector:checked').length > 0) {
+                    var csvUids = '';
+                    $('input.messageSelector:checked').each(function () {
+                        csvUids = csvUids + ',' + $(this).prop('id');
+                    });
+                    csvUids = csvUids.replace(/(^,)|(,$)/g, "");
+                    $.ajax({
+                        url: '@Url.Action("Delete")',
+                        type: 'POST',
+                        data: "{csEmailUids:'" + csvUids + "'}",
+                        dataType: 'json',
+                        processData: false,
+                        contentType: 'application/json; charset=utf-8',
+                        success: OnSuccess,
+                        error: OnError,
+                        timeout: 30000
+                    });
+                }
+                else {
+                    var req =
+                        {
+                            message: "Please select at least one email to delete it!"
+                        };
+                    OnError()
+                }
+            });
+
+        });
+    </script>
+</div>

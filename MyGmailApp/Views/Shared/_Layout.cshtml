@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My Gmail Application</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                @Html.ActionLink("My Gmail Application", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                @if (Request.IsAuthenticated)
+                {
+                    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "right" }))
+                    {
+                        <div class="dropdown pull-right" style="top: 8px !important">
+                            <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+                                @User.Identity.Name
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Go To Inbox", "Index", "Mail", routeValues: null, htmlAttributes: new { title = "Go To Inbox" })</li>
+                                <li>@Html.ActionLink("Manage Profile", "ManageUserProfile", "Account", routeValues: null, htmlAttributes: new { title = "Manage Profile" })</li>
+                                <li>@Html.ActionLink("Manage Gmail Credentials", "ManageGmailProfile", "Account", routeValues: null, htmlAttributes: new { title = "Manage Gmail Profile" })</li>
+                                <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                            </ul>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="dropdown pull-right" style="top: 8px !important">
+                        <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+                            @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                            <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="body-content container">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My Gmail Application</p>
+        </footer>
+    </div>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

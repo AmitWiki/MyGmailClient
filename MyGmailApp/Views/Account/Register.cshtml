@@ -1,0 +1,56 @@
+﻿@model MyGmailApp.Models.Login
+
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>User Registration</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true);
+
+    @Html.AntiForgeryToken();
+
+                            if (ViewBag.Message != null)
+                            {
+                                <div style="border:solid 1px green">
+                                    @ViewBag.Message
+                                </div>
+                            }
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.FullName)
+                                <div class="form-group">
+                                    @Html.EditorFor(model => model.FullName)
+                                    @Html.ValidationMessageFor(model => model.FullName)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Username)
+
+                                <div class="form-group">
+                                    @Html.EditorFor(model => model.Username)
+                                    @Html.ValidationMessageFor(model => model.Username)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Password)
+                                <div class="form-group">
+                                    @Html.PasswordFor(model => model.Password)
+                                    @Html.ValidationMessageFor(model => model.Password)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ConfirmPassword)
+
+                                <div class="form-group">
+                                    @Html.PasswordFor(model => model.ConfirmPassword)
+                                    @Html.ValidationMessageFor(model => model.ConfirmPassword)
+                                </div>
+                            </div>
+                            <div class="editor-label">
+                                <input type="submit" class="btn btn-primary" value="Register" />
+                            </div>
+}

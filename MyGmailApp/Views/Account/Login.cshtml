@@ -1,0 +1,21 @@
+﻿@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Login</h2>
+
+@using (Html.BeginForm("Login", "Account", null, FormMethod.Post))
+{
+    @Html.ValidationSummary(true) <br />
+    <div class="form-group">
+        <label for="inputEmail">Username</label>
+        @Html.TextBox("Username", "", new { @class = "form-control", @placeholder = "Email" })
+    </div>
+    <div class="form-group">
+        <label for="inputPassword">Password</label>
+        @Html.Password("password", "", new { @class = "form-control", @placeholder = "Password" })
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+}
+
